@@ -64,10 +64,10 @@ class AlbumViewDetailViewController: UIViewController {
         guard let album = viewModel.results else { return }
         albumImage.loadImageWithUrl(album.artworkUrl100)
         albumName.text = album.name
-        artistName.text = album.artistName
-        genreName.text = album.genres?.first?.name
-        releaseDate.text = album.releaseDate
-        copyRight.text = album.copyright
+        artistName.text = "Artist name: \(album.artistName ?? "")"
+        genreName.text = "Genre: \(album.genres?.first?.name ?? "")"
+        releaseDate.text = "Release date: \(album.releaseDate ?? "")"
+        copyRight.text = "Copy right: \(album.copyright ?? "")"
         itunesButton.url = album.artistUrl
     }
     
