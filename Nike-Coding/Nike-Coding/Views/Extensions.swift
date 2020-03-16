@@ -86,7 +86,7 @@ extension UIImageView {
         
         activityIndicator.startAnimating()
         
-        // retrieves image if already available in cache
+        // retrieves image if already available in cache 
         if let imageFromCache = imageCache.object(forKey: NSString(string: url)) {
             setImage(albumImage: imageFromCache)
         } else {
@@ -94,9 +94,7 @@ extension UIImageView {
                 URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
                     if let data = data {
                         imageCache.setObject(UIImage(data: data) ?? UIImage(), forKey: NSString(string: url))
-                        DispatchQueue.main.async {
-                            self.setImage(albumImage: UIImage(data: data))
-                        }
+                        self.setImage(albumImage: UIImage(data: data))
                     }
                 }.resume()
             }
@@ -111,3 +109,9 @@ extension UIImageView {
         }
     }
 }
+
+public enum Constants {
+    static let URL = "https://rss.itunes.apple.com/api/v1/us/apple-music/coming-soon/all/100/explicit.json"
+    static let ErrorMessage = "Sorry something went wrong, please try again"
+}
+

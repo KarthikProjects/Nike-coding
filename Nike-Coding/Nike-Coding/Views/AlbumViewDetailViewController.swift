@@ -20,10 +20,10 @@ class AlbumViewDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        buildScreen()
+        buildAlbumDetailScreen()
     }
     
-    func buildScreen() {
+    func buildAlbumDetailScreen() {
         view.backgroundColor = .black
         let scrollView = UIScrollView()
         var contentStackView = UIStackView()
@@ -34,9 +34,9 @@ class AlbumViewDetailViewController: UIViewController {
         let height = safeArea.layoutFrame.size.height
         
         view.addSubview(scrollView)
-        
         scrollView.setConstraints(top: safeArea.topAnchor, bottom: safeArea.bottomAnchor, left: view.leadingAnchor, right: view.trailingAnchor, topSpace: 0, bottomSpace: 0, leadingSpace: 0, trailingSpace: 0, width: width, height: height)
         
+        // add constraints to Image view
         albumImage.setConstraints(top: nil, bottom: nil, left: nil, right: nil, topSpace: 0, bottomSpace: 0, leadingSpace: 0, trailingSpace: 0, width: 350, height: 350)
         contentStackView = UIStackView(arrangedSubviews: [albumImage, albumName, artistName, genreName, releaseDate, copyRight])
         
@@ -48,16 +48,20 @@ class AlbumViewDetailViewController: UIViewController {
         contentStackView.axis = .vertical
         contentStackView.alignment = .center
         
+        // add constraints to stackview
         contentStackView.setConstraints(top: scrollView.topAnchor, bottom: nil, left: scrollView.leadingAnchor, right: scrollView.trailingAnchor, topSpace: 20, bottomSpace: 0, leadingSpace: 20, trailingSpace: 20, width: width - 40, height: 0)
         setDescriptionToLabels()
         
         itunesButton.setConstraints(top: nil, bottom: nil, left: scrollView.leadingAnchor, right: scrollView.trailingAnchor, topSpace: 0, bottomSpace: 0, leadingSpace: 20, trailingSpace: 20, width: width - 40, height: 44)
-        
+        addConstraintsToiTunesButton(contentStackView: contentStackView, safeArea: safeArea, scrollView: scrollView)
+        itunesButton.addTarget(self, action: #selector(iTunesButtonTapped(_:)), for: .touchUpInside)
+    }
+    
+    // Add constraints to Itunes button 20px left, 20px right, 20px from bottom
+    func addConstraintsToiTunesButton(contentStackView: UIStackView, safeArea: UILayoutGuide, scrollView: UIScrollView) {
         NSLayoutConstraint(item: contentStackView, attribute: .bottom, relatedBy: .lessThanOrEqual, toItem: itunesButton, attribute: .top, multiplier: 1.0, constant: -20).isActive = true
         NSLayoutConstraint(item: itunesButton, attribute: .bottom, relatedBy: .greaterThanOrEqual, toItem: safeArea, attribute: .bottom, multiplier: 1.0, constant: -20.0).isActive = true
         NSLayoutConstraint(item: itunesButton, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
-
-        itunesButton.addTarget(self, action: #selector(iTunesButtonTapped(_:)), for: .touchUpInside)
     }
     
     func setDescriptionToLabels() {
@@ -71,6 +75,7 @@ class AlbumViewDetailViewController: UIViewController {
         itunesButton.url = album.artistUrl
     }
     
+    // ITunes Button action
     @objc func iTunesButtonTapped(_ sender: ItunesButton) {
         guard let urlStr = sender.url else{
             return

@@ -26,14 +26,14 @@ class AlbumsViewController: UIViewController {
         viewModel.delegate = self
     }
     
-    func setUpNavigationBar() {
+    private func setUpNavigationBar() {
         navigationItem.title = "Top Albums"
         navigationController?.navigationBar.barTintColor = .orange
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
     }
     
-    func setUpTableView() {
+    private func setUpTableView() {
         albumsTableView.separatorStyle = .none
         albumsTableView.separatorColor = .gray
         albumsTableView.backgroundColor = .black
@@ -54,8 +54,8 @@ class AlbumsViewController: UIViewController {
         activityIndicator.center = view.center
         view.addSubview(activityIndicator)
     }
-
-    func addConstraintsToTableView() {
+    
+    private  func addConstraintsToTableView() {
         albumsTableView.translatesAutoresizingMaskIntoConstraints = false
         albumsTableView.topAnchor.constraint(equalTo:view.safeAreaLayoutGuide.topAnchor).isActive = true
         albumsTableView.leadingAnchor.constraint(equalTo:view.safeAreaLayoutGuide.leadingAnchor).isActive = true
@@ -64,12 +64,12 @@ class AlbumsViewController: UIViewController {
     }
 }
 
-
+// Table delegate methods
 extension AlbumsViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.albumResponse.feed?.results?.count ?? 0
     }
@@ -77,7 +77,7 @@ extension AlbumsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumDetailTableViewCell", for: indexPath) as! AlbumDetailTableViewCell
         guard let result = viewModel.albumResponse.feed?.results else { return cell}
@@ -98,12 +98,43 @@ extension AlbumsViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// Protocols
 extension AlbumsViewController: AlbumsViewViewModelProtocol {
+    func showAlertMessage() {
+        DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
+            self.showAlertView()
+        }
+    }
+    
     func updateTableView() {
         DispatchQueue.main.async {
             self.albumsTableView.reloadData()
             self.albumsTableView.separatorStyle = .singleLine
             self.activityIndicator.stopAnimating()
         }
+    }
+}
+
+// Show alert view when service fails and continue action should try again to load data
+extension AlbumsViewController {
+    func showAlertView() {
+        guard let alertMessage = viewModel.errorMessage else { return }
+        let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Continue", style: UIAlertAction.Style.default, handler: { action in
+            switch action.style {
+            case .default:
+                self.viewModel.fetchAlbums()
+                break
+            case .cancel:
+                break
+            case .destructive:
+                break
+            @unknown default:
+                break
+            }
+            
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 }
