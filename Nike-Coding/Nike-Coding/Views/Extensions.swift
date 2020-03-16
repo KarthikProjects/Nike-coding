@@ -9,10 +9,10 @@
 import UIKit
 
 extension UIView {
-    func setConstraints(top: NSLayoutYAxisAnchor?, bottom: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, right: NSLayoutXAxisAnchor?, topSpace: CGFloat, bottomSpace: CGFloat, leadingSpace: CGFloat, trailingSpace: CGFloat, width: CGFloat, height: CGFloat) {
+    func setConstraints(top: NSLayoutYAxisAnchor?, bottom: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, right: NSLayoutXAxisAnchor?, topSpace: CGFloat, bottomSpace: CGFloat, leadingSpace: CGFloat, trailingSpace: CGFloat, width: CGFloat, height: CGFloat, isTopConstraintActive: Bool? = true) {
         translatesAutoresizingMaskIntoConstraints = false
         if let top = top {
-            self.topAnchor.constraint(equalTo: top, constant: topSpace).isActive = true
+            self.topAnchor.constraint(equalTo: top, constant: topSpace).isActive = isTopConstraintActive ?? true
         }
         if let bottom = bottom {
             self.bottomAnchor.constraint(equalTo: bottom, constant: bottomSpace).isActive = true
@@ -70,7 +70,10 @@ let activityIndicator = UIActivityIndicatorView()
 extension UIImageView {
     
     func loadImageWithUrl(_ url: String?) {
-        guard let url = url else { return }
+        guard let url = url else {
+            setImage(albumImage: UIImage(named: ""))
+            return
+        }
         guard let imageURL = URL(string: url) else { return }
         
         // setup activityIndicator...
@@ -81,25 +84,30 @@ extension UIImageView {
         activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        image = nil
         activityIndicator.startAnimating()
         
         // retrieves image if already available in cache
         if let imageFromCache = imageCache.object(forKey: NSString(string: url)) {
-            self.image = imageFromCache
-            activityIndicator.stopAnimating()
+            setImage(albumImage: imageFromCache)
         } else {
             DispatchQueue.global().async {
                 URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
                     if let data = data {
                         imageCache.setObject(UIImage(data: data) ?? UIImage(), forKey: NSString(string: url))
                         DispatchQueue.main.async {
-                            self.image = UIImage(data: data)
-                            activityIndicator.stopAnimating()
+                            self.setImage(albumImage: UIImage(data: data))
                         }
                     }
                 }.resume()
             }
+        }
+    }
+    
+    func setImage(albumImage: UIImage?) {
+        guard let albumImage = albumImage else { return }
+        DispatchQueue.main.async {
+            self.image = albumImage
+            activityIndicator.stopAnimating()
         }
     }
 }

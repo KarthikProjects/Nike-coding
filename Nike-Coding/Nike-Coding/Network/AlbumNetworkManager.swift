@@ -10,20 +10,6 @@ import Foundation
 
 public class AlbumNetworkManager: Codable {
     
-    //APPError enum which shows all possible errors
-    enum APPError: Error {
-        case networkError(Error)
-        case dataNotFound
-        case jsonParsingError(Error)
-        case invalidStatusCode(Int)
-    }
-
-    //Result enum to show success or failure
-    enum Result<T> {
-        case success(Data)
-        case failure(Error)
-    }
-
     //dataRequest which sends request to given URL and convert to Decodable Object
     func dataRequest<T: Decodable>(with url: String, objectType: T.Type, completion: @escaping (T?, Error?) -> Void) {
 

@@ -34,6 +34,8 @@ class AlbumsViewController: UIViewController {
     }
     
     func setUpTableView() {
+        albumsTableView.separatorStyle = .none
+        albumsTableView.separatorColor = .gray
         albumsTableView.backgroundColor = .black
         view.addSubview(albumsTableView)
         addConstraintsToTableView()
@@ -100,6 +102,7 @@ extension AlbumsViewController: AlbumsViewViewModelProtocol {
     func updateTableView() {
         DispatchQueue.main.async {
             self.albumsTableView.reloadData()
+            self.albumsTableView.separatorStyle = .singleLine
             self.activityIndicator.stopAnimating()
         }
     }
