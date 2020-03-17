@@ -115,3 +115,6 @@ public enum Constants {
     static let ErrorMessage = "Sorry something went wrong, please try again"
 }
 
+public class ItunesButton: UIButton {
+    var url : String?
+}

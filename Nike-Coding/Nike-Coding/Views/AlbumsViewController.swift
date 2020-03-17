@@ -79,7 +79,9 @@ extension AlbumsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumDetailTableViewCell", for: indexPath) as! AlbumDetailTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumDetailTableViewCell", for: indexPath) as? AlbumDetailTableViewCell else {
+            return UITableViewCell()
+        }
         guard let result = viewModel.albumResponse.feed?.results else { return cell}
         let album = result[indexPath.row]
         cell.selectionStyle = .none

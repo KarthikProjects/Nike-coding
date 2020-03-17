@@ -86,7 +86,3 @@ class AlbumViewDetailViewController: UIViewController {
         }
     }
 }
-
-public class ItunesButton: UIButton {
-    var url : String?
-}

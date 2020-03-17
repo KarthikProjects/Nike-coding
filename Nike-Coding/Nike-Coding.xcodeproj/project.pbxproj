@@ -49,6 +49,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		251FA637242110DE00309CAF /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				257B84E4241DDE7600C312A6 /* Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		25AA8CEA241B25A20055E6BF = {
 			isa = PBXGroup;
 			children = (
@@ -68,6 +76,7 @@
 		25AA8CF5241B25A20055E6BF /* Nike-Coding */ = {
 			isa = PBXGroup;
 			children = (
+				251FA637242110DE00309CAF /* Extensions */,
 				25AA8D0E241B2E9B0055E6BF /* Assets */,
 				25AA8D0D241B28260055E6BF /* ViewModels */,
 				25AA8D0C241B28190055E6BF /* Views */,
@@ -103,7 +112,6 @@
 				25AA8CFA241B25A20055E6BF /* AlbumsViewController.swift */,
 				25AA8D11241B2F940055E6BF /* AlbumViewDetailViewController.swift */,
 				25AA8D13241B30120055E6BF /* AlbumDetailTableViewCell.swift */,
-				257B84E4241DDE7600C312A6 /* Extensions.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
